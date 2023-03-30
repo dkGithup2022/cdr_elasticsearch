@@ -1,4 +1,4 @@
-package com.dk0124.cdr.es.dto.upbit;
+package com.dk0124.cdr.es.document.upbit;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class UpbitCandleDto {
+public class UpbitCandleDoc {
     @NotNull
     @JsonAlias("timestamp")
     private Long timestamp;

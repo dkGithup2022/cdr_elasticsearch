@@ -2,7 +2,7 @@ package com.dk0124.cdr.es.dao.upbit.unit;
 
 import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
 import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
-import com.dk0124.cdr.es.dto.upbit.UpbitCandleDto;
+import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,12 +40,12 @@ class UpbitCandleRepositoryTest {
     @MethodSource("get_index_names")
     void testIndex(String indexName) {
         // given
-        UpbitCandleDto document = UpbitCandleDto.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
+        UpbitCandleDoc document = UpbitCandleDoc.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
         IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
 
         // when
         when(elasticsearchOperations.save(document, indexCoordinates)).thenReturn(document);
-        UpbitCandleDto result = candleRepository.index(indexName, document);
+        UpbitCandleDoc result = candleRepository.index(indexName, document);
 
         // then
         assertEquals(document, result);
@@ -56,13 +56,13 @@ class UpbitCandleRepositoryTest {
     @MethodSource("get_index_names")
     void testIndexWithId(String indexName) {
         // given
-        UpbitCandleDto document = UpbitCandleDto.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
+        UpbitCandleDoc document = UpbitCandleDoc.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
         IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
 
         // when
         when(elasticsearchOperations.save(document, indexCoordinates)).thenReturn(document);
 
-        UpbitCandleDto result = candleRepository.index(indexName, indexName, document);
+        UpbitCandleDoc result = candleRepository.index(indexName, indexName, document);
 
         // then
         assertEquals(document, result);
