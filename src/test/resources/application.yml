@@ -1,0 +1,19 @@
+#컨테이너
+spring:
+  config:
+    activate:
+      on-profile: container
+
+  main:
+    allow-bean-definition-overriding: true
+
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:///testDb
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
