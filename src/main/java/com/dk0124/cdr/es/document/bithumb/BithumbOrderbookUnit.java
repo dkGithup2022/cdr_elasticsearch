@@ -7,13 +7,13 @@ import lombok.*;
 
 import java.util.Date;
 
-
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class BithumbTickDoc {
+@NoArgsConstructor
+@ToString
+public class BithumbOrderbookUnit {
 
     @JsonProperty("code")
     @JsonAlias("symbol")

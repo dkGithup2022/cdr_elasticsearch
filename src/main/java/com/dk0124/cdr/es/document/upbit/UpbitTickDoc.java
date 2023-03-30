@@ -15,7 +15,6 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of = "id")
 public class UpbitTickDoc {
 
     @NotNull
