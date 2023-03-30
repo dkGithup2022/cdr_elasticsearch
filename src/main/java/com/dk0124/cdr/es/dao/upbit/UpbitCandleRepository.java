@@ -1,5 +1,6 @@
 package com.dk0124.cdr.es.dao.upbit;
 
+import com.dk0124.cdr.es.dao.ElasticsearchRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -18,30 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
-public class UpbitCandleRepository {
+public class UpbitCandleRepository extends ElasticsearchRepository<UpbitCandleDoc> {
 
-    private final ElasticsearchOperations elasticsearchOperations;
-
-    public UpbitCandleDoc index(String indexName, UpbitCandleDoc document) {
-        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
-        return elasticsearchOperations.save(document, indexCoordinates);
+    public UpbitCandleRepository(ElasticsearchOperations elasticsearchOperations) {
+        super(elasticsearchOperations);
     }
 
-    public UpbitCandleDoc index(String indexName, String id, UpbitCandleDoc document) {
-        IndexQuery indexQuery = new IndexQueryBuilder()
-                .withId(id) // 문서 아이디 지정
-                .withObject(document)
-                .build();
-
-        IndexQuery querysRes =  elasticsearchOperations.save(indexQuery, IndexCoordinates.of(indexName));
-
-        if (querysRes == null )
-            throw new RuntimeException("Operation response is null ");
-
-        return (UpbitCandleDoc) querysRes.getObject();
-    }
-
+    /*
     public List<UpbitCandleDoc> search(String indexName, Pageable pageable) {
         IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
 
@@ -58,5 +42,6 @@ public class UpbitCandleRepository {
                 .withPageable(pageable)
                 .build();
     }
+     */
 
 }

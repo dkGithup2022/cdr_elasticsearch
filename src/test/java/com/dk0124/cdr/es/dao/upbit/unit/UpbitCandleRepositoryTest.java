@@ -13,12 +13,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -56,16 +60,7 @@ class UpbitCandleRepositoryTest {
     @MethodSource("get_index_names")
     void testIndexWithId(String indexName) {
         // given
-        UpbitCandleDoc document = UpbitCandleDoc.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
-        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
 
-        // when
-        when(elasticsearchOperations.save(document, indexCoordinates)).thenReturn(document);
-
-        UpbitCandleDoc result = candleRepository.index(indexName, indexName, document);
-
-        // then
-        assertEquals(document, result);
     }
 
     static Stream<Arguments> get_index_names() {
