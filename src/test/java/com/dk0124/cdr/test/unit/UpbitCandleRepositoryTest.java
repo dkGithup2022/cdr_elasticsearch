@@ -1,7 +1,7 @@
 package com.dk0124.cdr.test.unit;
 
 import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
-import com.dk0124.cdr.test.UpbitCandleRepository;
+import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

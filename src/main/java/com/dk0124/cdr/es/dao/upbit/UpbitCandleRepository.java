@@ -1,4 +1,4 @@
-package com.dk0124.cdr.test;
+package com.dk0124.cdr.es.dao.upbit;
 
 import com.dk0124.cdr.es.dao.ElasticsearchRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;

@@ -1,7 +1,7 @@
-package com.dk0124.cdr.test;
+package com.dk0124.cdr.es.dao.upbit;
 
 
-import com.dk0124.cdr.es.document.upbit.UpbitTickDoc;
+import com.dk0124.cdr.es.document.upbit.UpbitOrderbookDoc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -11,16 +11,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UpbitTickRespository {
+public class UpbitOrderbookRepository {
 
     private final ElasticsearchOperations elasticsearchOperations;
 
-    public UpbitTickDoc index(String indexName, UpbitTickDoc document) {
+    public UpbitOrderbookDoc index(String indexName, UpbitOrderbookDoc document) {
         IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
         return elasticsearchOperations.save(document, indexCoordinates);
     }
 
-    public UpbitTickDoc index(String indexName, String id,  UpbitTickDoc document) {
+    public UpbitOrderbookDoc index(String indexName, String id, UpbitOrderbookDoc document) {
         IndexQuery indexQuery = new IndexQueryBuilder()
                 .withId(id) // 문서 아이디 지정
                 .withObject(document)
@@ -31,6 +31,7 @@ public class UpbitTickRespository {
         if (res == null)
             throw new RuntimeException("Operation response is null ");
 
-        return (UpbitTickDoc) res.getObject();
+        return (UpbitOrderbookDoc) res.getObject();
     }
+
 }
