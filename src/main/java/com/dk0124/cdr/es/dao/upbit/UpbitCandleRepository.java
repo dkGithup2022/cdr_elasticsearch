@@ -12,23 +12,6 @@ public class UpbitCandleRepository extends ElasticsearchRepository<UpbitCandleDo
         super(elasticsearchOperations);
     }
 
-    /*
-    public List<UpbitCandleDoc> search(String indexName, Pageable pageable) {
-        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
-
-        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
-        Query searchQuery = buildSearchQuery(queryBuilder, pageable);
-
-        return elasticsearchOperations.search(searchQuery, UpbitCandleDoc.class, indexCoordinates)
-                .get().map(SearchHit::getContent).collect(Collectors.toList());
-    }
-
-    private Query buildSearchQuery(QueryBuilder queryBuilder, Pageable pageable) {
-        return new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                .withPageable(pageable)
-                .build();
-    }
-     */
+    public Class<UpbitCandleDoc> getDocType() { return UpbitCandleDoc.class; }
 
 }

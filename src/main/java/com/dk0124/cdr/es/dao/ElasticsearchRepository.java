@@ -1,16 +1,26 @@
 package com.dk0124.cdr.es.dao;
 
 
+import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
-import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class ElasticsearchRepository<T> {
+public abstract class ElasticsearchRepository<T> {
     private final ElasticsearchOperations elasticsearchOperations;
 
     public T index(String indexName, T document) {
@@ -24,11 +34,27 @@ public class ElasticsearchRepository<T> {
                 .withObject(document)
                 .build();
 
-        IndexQuery res = elasticsearchOperations.save(indexQuery, IndexCoordinates.of(indexName));
+        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
+        String response = elasticsearchOperations.index(indexQuery, indexCoordinates);
 
-        if (res == null)
-            throw new RuntimeException("Operation response is null ");
+        if (response == null) {
+            throw new RuntimeException("Operation response is null");
+        }
 
-        return (T) res.getObject();
+        return (T) document;
     }
+
+
+    public Page<T> findAll(String indexName, Pageable pageable) {
+
+        Query query = Query.findAll();
+        query.setPageable(pageable);
+
+        SearchHits<T> searchHits = elasticsearchOperations.search(query, getDocType(), IndexCoordinates.of(indexName));
+        SearchPage<T> page = SearchHitSupport.searchPageFor(searchHits, query.getPageable());
+
+        return (Page<T>) SearchHitSupport.unwrapSearchHits(page);
+    }
+
+    public abstract Class getDocType();
 }

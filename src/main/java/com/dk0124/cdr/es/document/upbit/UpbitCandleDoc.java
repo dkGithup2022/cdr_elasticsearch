@@ -1,6 +1,7 @@
 package com.dk0124.cdr.es.document.upbit;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,12 +15,14 @@ import java.util.Date;
 @Setter
 @ToString
 public class UpbitCandleDoc {
+
     @NotNull
-    @JsonAlias("timestamp")
+    @JsonProperty("timestamp")
     private Long timestamp;
 
     @NotNull
     @JsonAlias({"code","market","cd"})
+    @JsonProperty("market")
     private String market;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -43,8 +46,10 @@ public class UpbitCandleDoc {
     private Double tradePrice;
 
     @JsonAlias("candle_acc_trade_price")
+    @JsonProperty("candleAccTradePrice")
     private Double candleAccTradePrice;
 
     @JsonAlias("candle_acc_trade_volume")
     private Double candleAccTradeVolume;
+
 }
