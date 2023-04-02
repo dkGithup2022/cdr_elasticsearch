@@ -4,7 +4,7 @@ package com.dk0124.cdr.test.integration.tests;
 import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
 import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
-import com.dk0124.cdr.test.integration.EsIndexOps;
+import com.dk0124.cdr.test.util.EsIndexOps;
 import com.dk0124.cdr.test.integration.ElasticTestContainer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +44,7 @@ public class UpbitCandleRepositoryTest {
     }
 
     @BeforeEach
-    public void reCreateIndex() throws IOException {
+    public void re_create_index() throws IOException {
         String sp = "elastic/upbit/tick_setting.json";
         String mp = "elastic/upbit/tick_mapping.json";
         String prefix = "upbit_tick_";
@@ -53,20 +53,18 @@ public class UpbitCandleRepositoryTest {
             String[] splitted = code.toString().toLowerCase(Locale.ROOT).split("-");
             String idx = prefix + String.join("_", splitted);
             esIndexOps.deleteIndex(idx);
+            esIndexOps.forceMergeAll();
             esIndexOps.createIndexWithMappingAndSetting(idx, mp, sp);
+            esIndexOps.forceMerge(idx);
         }
     }
 
-    @Test
-    public void empty() {
-        assertNotNull(candleRepository);
-    }
 
     @Test
     @DisplayName("같은 아이디에 저장")
-    public void saveSamePW() throws InterruptedException {
+    public void save_on_same_id() throws InterruptedException {
         UpbitCoinCode code = UpbitCoinCode.KRW_ADA;
-        String index = "upbit_candle_krw_ada";
+        String index = "upbit_candle_krw_btc";
 
         UpbitCandleDoc doc1 = UpbitCandleDoc.builder().timestamp(1L).build();
         UpbitCandleDoc doc2 = UpbitCandleDoc.builder().timestamp(2L).build();
@@ -74,7 +72,8 @@ public class UpbitCandleRepositoryTest {
         candleRepository.index(index, "same", doc1);
         candleRepository.index(index, "same", doc2);
 
-        Thread.sleep(1000); // TODO : native query 로 forceMerge 가능한지 확인 필요.
+        esIndexOps.forceMerge(index);
+        Thread.sleep(1000);
 
         Page<UpbitCandleDoc> page = candleRepository.findAll(index, PageRequest.of(0, 100));
         assertEquals(1, page.getContent().size());
@@ -83,7 +82,7 @@ public class UpbitCandleRepositoryTest {
 
     @Test
     @DisplayName(" 저장된 칼럼 확인 ")
-    public void checkAllColumn() throws InterruptedException {
+    public void check_all_column() throws InterruptedException {
         UpbitCoinCode code = UpbitCoinCode.KRW_ADA;
         String index = "upbit_candle_krw_ada";
 
@@ -94,6 +93,8 @@ public class UpbitCandleRepositoryTest {
                     .market(code.toString())
                     .candleDateTimeUtc(new Date())
                     .candleDateTimeKst(new Date())
+                    .candleAccTradeVolume(10.0)
+                    .candleAccTradePrice(10.0)
                     .openingPrice(10.0)
                     .highPrice(10.0)
                     .lowPrice(10.0)
@@ -104,11 +105,13 @@ public class UpbitCandleRepositoryTest {
             System.out.println(indexed);
         }
 
+        Thread.sleep(1000);
+
         Pageable pageable = PageRequest.of(0, 3);
         Page<UpbitCandleDoc> res = candleRepository.findAll(index, pageable);
 
         for (UpbitCandleDoc doc : res.getContent()) {
-
+            System.out.println(doc.toString());
             assertNotNull(doc.getTimestamp());
             assertNotNull(doc.getMarket());
             assertNotNull(doc.getCandleAccTradePrice());
