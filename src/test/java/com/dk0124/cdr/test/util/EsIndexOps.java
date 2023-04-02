@@ -25,18 +25,20 @@ public class EsIndexOps {
 
     private ElasticsearchRestTemplate elasticsearchOperations;
 
+    private final int testPort = 29200;
+
     public EsIndexOps() {
-        RestHighLevelClient client = RestClients.create(ClientConfiguration.localhost()).rest();
+        RestHighLevelClient client = RestClients.create(ClientConfiguration.create("localhost:" + testPort)).rest();
         elasticsearchOperations = new ElasticsearchRestTemplate(client);
         elasticsearchOperations.setRefreshPolicy(RefreshPolicy.IMMEDIATE); // 테스트에선 refresh interval 무시됨.
     }
 
-    public boolean deleteIndex(String index){
+    public boolean deleteIndex(String index) {
         return elasticsearchOperations.indexOps(IndexCoordinates.of(index)).delete();
     }
 
-    public void forceMerge(String index){
-        String forcemergeUrl = "http://localhost:9200/" + index + "/_forcemerge?max_num_segments=1";
+    public void forceMerge(String index) {
+        String forcemergeUrl = "http://localhost:" + testPort + "/" + index + "/_forcemerge?max_num_segments=1";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -45,8 +47,8 @@ public class EsIndexOps {
         System.out.println(response.getBody());
     }
 
-    public void forceMergeAll(){
-        String forcemergeUrl = "http://localhost:9200/_forcemerge";
+    public void forceMergeAll() {
+        String forcemergeUrl = "http://localhost:" + testPort + "/_forcemerge";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

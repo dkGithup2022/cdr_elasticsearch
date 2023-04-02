@@ -37,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * spring data elasticsearch 에서 @Document 없이 매핑하는 경우 칼럼에 null  생기는 경우 있음.
  *  연산 후 null check 하는 함수 제작 필요 .
+ *
+ *  -> 아래 결과 index with id & findAll 에 null 값 없음 확인 .
  */
 @Testcontainers
 @ExtendWith(SpringExtension.class)

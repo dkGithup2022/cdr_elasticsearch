@@ -1,6 +1,6 @@
 spring:
   elasticsearch:
-    port: 9200
+    port: 29200
     host: localhost
     rest:
       connection-pool:

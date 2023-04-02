@@ -15,8 +15,8 @@ public class ElasticTestContainer extends ElasticsearchContainer {
     public ElasticTestContainer() {
         super(DOCKER_ELASTIC);
 
-        this.addFixedExposedPort(9200, 9200);
-        this.addFixedExposedPort(9300, 9300);
+        this.addFixedExposedPort(29200, 9200);
+        this.addFixedExposedPort(29300, 9300);
         this.withEnv("ES_JAVA_OPTS", "-Xms256m -Xmx512m -XX:MaxDirectMemorySize=536870912");
         this.addEnv(CLUSTER_NAME, ELASTIC_SEARCH);
         this.withEnv("discovery.type", "single-node");
