@@ -14,7 +14,7 @@
 
     <groupId>com.dk0124.cdr</groupId>
     <artifactId>cdr_es</artifactId>
-    <version>1.0_SNAPSHOT</version>
+    <version>0.5</version>
     <description>CDR Project Elasticsearch Lib</description>
 
 
