@@ -44,7 +44,7 @@ public class UpbitTickDoc {
 
     @JsonProperty("pcp")
     @JsonAlias("prev_closing_price")
-    private Double prev_closing_price;
+    private Double prevClosingPrice;
 
     @JsonProperty("c")
     @JsonAlias("change")
@@ -52,7 +52,7 @@ public class UpbitTickDoc {
 
     @JsonProperty("cp")
     @JsonAlias("change_price")
-    private Double change_price;
+    private Double changePrice;
 
     @JsonProperty("td")
     @JsonAlias({"trade_date","trade_date_utc"})

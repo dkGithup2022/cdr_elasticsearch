@@ -33,8 +33,6 @@ public class UpbitCandleRepositoryTest {
     @Container
     private static ElasticTestContainer esContainer = new ElasticTestContainer();
 
-    @Autowired
-    private UpbitCandleRepository candleRepository;
 
     private static EsIndexOps esIndexOps = new EsIndexOps();
 
@@ -43,10 +41,13 @@ public class UpbitCandleRepositoryTest {
         esContainer.start();
     }
 
+    @Autowired
+    private UpbitCandleRepository candleRepository;
+
     @BeforeEach
     public void re_create_index() throws IOException {
-        String sp = "elastic/upbit/tick_setting.json";
-        String mp = "elastic/upbit/tick_mapping.json";
+        String sp = "elastic/upbit/candle_setting.json";
+        String mp = "elastic/upbit/candle_mapping.json";
         String prefix = "upbit_tick_";
 
         for (UpbitCoinCode code : UpbitCoinCode.values()) {
@@ -61,7 +62,7 @@ public class UpbitCandleRepositoryTest {
 
 
     @Test
-    @DisplayName("같은 아이디에 저장")
+    @DisplayName(" index : 같은 아이디에 저장")
     public void save_on_same_id() throws InterruptedException {
         UpbitCoinCode code = UpbitCoinCode.KRW_ADA;
         String index = "upbit_candle_krw_btc";
@@ -122,6 +123,5 @@ public class UpbitCandleRepositoryTest {
             assertNotNull(doc.getCandleDateTimeUtc());
 
         }
-
     }
 }

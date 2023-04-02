@@ -4,11 +4,19 @@ spring-data-elasticsearch 를 이용한 프로젝트의 doc 클래스, dao 클�
 (~4/1 까지의 작업 . 이후 migration 을 마치고 나머지 읽기 요청에 대한 함수 작업 예정  )
 
 ---
+
 </br>
+
 #### 기능
 
 1. data type 정의. 
 2. DAO 공통 기능 정의
+
+- index
+- index (id)
+- findAll
+
+</br>
 
 ```java
 // 공통 기능 : index, index with id, findAll 
@@ -135,3 +143,8 @@ public class UpbitCandleRepositoryTest {
 3. 위에 공통 부분 태그나 SUPER class 로 묶을 수 있으면 좋을텐데,
     
     -> 적당한 용례를 못찾겠음. 추후 업데이트 필요 
+
+</br>
+
+4. elasticsearchOperations 에서 쿼리를 직접 작성 시 응답이 변수에 매핑되지 않음 .
+   -> spring data elasticsearch  에서 저렇게 밖에 지원 안하면 return type void 로 변경     

@@ -1,7 +1,7 @@
 package com.dk0124.cdr.es.dao;
 
 
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -32,7 +32,7 @@ public abstract class ElasticsearchRepository<T> {
 
         IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
         String response = elasticsearchOperations.index(indexQuery, indexCoordinates);
-
+        // 쿼리 직접 작성 시, entity string 이 매핑이 안됨 .
         if (response == null) {
             throw new RuntimeException("Operation response is null");
         }
@@ -53,4 +53,6 @@ public abstract class ElasticsearchRepository<T> {
     }
 
     public abstract Class getDocType();
+
+
 }

@@ -3,6 +3,7 @@ package com.dk0124.cdr.test.unit;
 import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
 import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -20,6 +23,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +62,22 @@ class UpbitCandleRepositoryTest {
     @MethodSource("get_index_names")
     void testIndexWithId(String indexName) {
         // given
+        UpbitCandleDoc document = UpbitCandleDoc.builder().highPrice(0.0).highPrice(0.0).market("CODE").build();
+        String id = indexName + "_id";
+
+        // when
+        IndexQuery indexQuery = new IndexQueryBuilder()
+                .withId(id) // 문서 아이디 지정
+                .withObject(document)
+                .build();
+
+        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
+        when(elasticsearchOperations.index(any(),any())).thenReturn(id);
+
+        UpbitCandleDoc result = candleRepository.index(indexName, id, document);
+
+        // then
+        assertEquals(document, result);
 
     }
 
