@@ -6,7 +6,7 @@ import com.dk0124.cdr.es.dao.bithumb.BithumbOrderbookResposirtory;
 import com.dk0124.cdr.es.dao.bithumb.BithumbTickRepository;
 import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
 import com.dk0124.cdr.es.dao.upbit.UpbitOrderbookRepository;
-import com.dk0124.cdr.es.dao.upbit.UpbitTickRespository;
+import com.dk0124.cdr.es.dao.upbit.UpbitTickRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
 import com.dk0124.cdr.es.document.upbit.UpbitOrderbookDoc;
 import com.dk0124.cdr.es.document.upbit.UpbitOrderbookUnit;
@@ -67,7 +67,7 @@ public class EsMappingTest {
     @Autowired
     UpbitOrderbookRepository upbitOrderbookRepository;
     @Autowired
-    UpbitTickRespository upbitTickRespository;
+    UpbitTickRepository upbitTickRepository;
 
     static String[][] PAIR = new String[][]{{"bithumb", "candle"}, {"bithumb", "tick"}, {"bithumb", "orderbook"}, {"upbit", "candle"}, {"upbit", "tick"}, {"upbit", "orderbook"}};
 
@@ -116,7 +116,7 @@ public class EsMappingTest {
                     .type("sell")
                     .build();
             String id = "" + i;
-            UpbitTickDoc indexed = upbitTickRespository.index(index, id, doc);
+            UpbitTickDoc indexed = upbitTickRepository.index(index, id, doc);
         }
 
         Thread.sleep(1000);
@@ -124,7 +124,7 @@ public class EsMappingTest {
         Pageable pageable = PageRequest.of(0, 3);
 
         // when
-        Page<UpbitTickDoc> res = upbitTickRespository.findAll(index, pageable);
+        Page<UpbitTickDoc> res = upbitTickRepository.findAll(index, pageable);
 
 
         //then

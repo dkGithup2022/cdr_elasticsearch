@@ -7,9 +7,9 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UpbitTickRespository extends ElasticsearchRepository<UpbitTickDoc> {
+public class UpbitTickRepository extends ElasticsearchRepository<UpbitTickDoc> {
 
-    public UpbitTickRespository(ElasticsearchOperations elasticsearchOperations) {
+    public UpbitTickRepository(ElasticsearchOperations elasticsearchOperations) {
         super(elasticsearchOperations);
     }
 
