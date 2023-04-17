@@ -1,12 +1,15 @@
 package com.dk0124.cdr.es.document.upbit;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,13 +28,16 @@ public class UpbitCandleDoc {
     @JsonProperty("market")
     private String market;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonAlias("candle_date_time_utc")
-    private Date candleDateTimeUtc;
+    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd'T'HH:mm:ss")
+    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime candleDateTimeUtc;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+
     @JsonAlias("candle_date_time_kst")
-    private Date candleDateTimeKst;
+    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd'T'HH:mm:ss")
+    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime candleDateTimeKst;
 
     @JsonAlias("opening_price")
     private Double openingPrice;

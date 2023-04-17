@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
@@ -37,7 +38,7 @@ public class BithumbOrderbookUnit {
     @JsonProperty ("cont_dtm")
     @JsonAlias("contDtm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
-    private Date contDtm;
+    private LocalDateTime contDtm;
 
     @JsonProperty ("updn")
     private String dpdn;

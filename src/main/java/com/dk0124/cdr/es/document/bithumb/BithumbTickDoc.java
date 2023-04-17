@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
@@ -35,12 +35,12 @@ public class BithumbTickDoc {
     @JsonAlias("contAmt")
     private Double contAmt;
 
-    @JsonProperty ("cont_dtm")
+    @JsonProperty("cont_dtm")
     @JsonAlias("contDtm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
-    private Date contDtm;
+    private LocalDateTime contDtm;
 
-    @JsonProperty ("updn")
+    @JsonProperty("updn")
     private String dpdn;
 
     // 생성된 값 -> 저장 시점에 생성 필요.
