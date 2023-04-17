@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,12 +57,12 @@ public class UpbitTickDoc {
     @JsonProperty("td")
     @JsonAlias({"trade_date","trade_date_utc"})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date tradeDateUtc;
+    private LocalDate tradeDateUtc;
 
     @JsonProperty("ttm")
     @JsonAlias({"trade_time","trade_time_utc"})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private Date tradeTimeUtc;
+    private LocalDate tradeTimeUtc;
 
     @JsonProperty("ttms")
     @JsonAlias("trade_timestamp")
@@ -76,5 +76,4 @@ public class UpbitTickDoc {
     @JsonAlias("stream_type")
     private String streamType;
 
-    //private CallType callType;
 }

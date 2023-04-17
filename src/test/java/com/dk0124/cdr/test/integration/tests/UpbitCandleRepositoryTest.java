@@ -4,9 +4,12 @@ package com.dk0124.cdr.test.integration.tests;
 import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
 import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
 import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
-import com.dk0124.cdr.test.util.EsIndexOps;
 import com.dk0124.cdr.test.integration.ElasticTestContainer;
-import org.junit.jupiter.api.*;
+import com.dk0124.cdr.test.util.EsIndexOps;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +21,11 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,13 +94,18 @@ public class UpbitCandleRepositoryTest {
         UpbitCoinCode code = UpbitCoinCode.KRW_ADA;
         String index = "upbit_candle_krw_ada";
 
+
+        String dateString = "2023-04-17T10:30:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
+
         for (int i = 0; i < 100; i++) {
             UpbitCandleDoc doc = UpbitCandleDoc.builder()
                     .candleAccTradePrice(10.0)
                     .timestamp(0L + i)
                     .market(code.toString())
-                    .candleDateTimeUtc(new Date())
-                    .candleDateTimeKst(new Date())
+                    .candleDateTimeUtc(dateTime)
+                    .candleDateTimeKst(dateTime)
                     .candleAccTradeVolume(10.0)
                     .candleAccTradePrice(10.0)
                     .openingPrice(10.0)

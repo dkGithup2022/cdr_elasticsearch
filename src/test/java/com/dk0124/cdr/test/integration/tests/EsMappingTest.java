@@ -27,8 +27,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,9 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * spring data elasticsearch 에서 @Document 없이 매핑하는 경우 칼럼에 null  생기는 경우 있음.
- *  연산 후 null check 하는 함수 제작 필요 .
- *
- *  -> 아래 결과 index with id & findAll 에 null 값 없음 확인 .
+ * 연산 후 null check 하는 함수 제작 필요 .
+ * <p>
+ * -> 아래 결과 index with id & findAll 에 null 값 없음 확인 .
  */
 @Testcontainers
 @ExtendWith(SpringExtension.class)
@@ -98,6 +99,7 @@ public class EsMappingTest {
         UpbitCoinCode code = UpbitCoinCode.KRW_ADA;
         String index = "upbit_tick_krw_ada";
 
+
         for (int i = 0; i < 10; i++) {
             UpbitTickDoc doc = UpbitTickDoc.builder()
                     .sequentialId(1L)
@@ -108,8 +110,8 @@ public class EsMappingTest {
                     .prevClosingPrice(10.0)
                     .streamType("soc")
                     .timestamp(0L + i)
-                    .tradeDateUtc(new Date())
-                    .tradeTimeUtc(new Date())
+                    .tradeDateUtc(LocalDate.of(1, 1, 1))
+                    .tradeTimeUtc(LocalDate.of(1, 1, 1))
                     .tradePrice(10.0)
                     .tradeVolume(10.0)
                     .tradeTimestamp(0L + i)
@@ -157,8 +159,8 @@ public class EsMappingTest {
                     .candleAccTradePrice(10.0)
                     .timestamp(0L + i)
                     .market(code.toString())
-                    .candleDateTimeUtc(new Date())
-                    .candleDateTimeKst(new Date())
+                    .candleDateTimeUtc(LocalDateTime.now())
+                    .candleDateTimeKst(LocalDateTime.now())
                     .candleAccTradeVolume(10.0)
                     .candleAccTradePrice(10.0)
                     .openingPrice(10.0)
@@ -203,16 +205,16 @@ public class EsMappingTest {
         for (int i = 0; i < 10; i++) {
             UpbitOrderbookDoc doc = UpbitOrderbookDoc.builder()
                     .code("ada")
-                    .timestamp(0L+i)
+                    .timestamp(0L + i)
                     .totalAskSize(10.0)
                     .totalBidSize(10.0)
                     .orderBookUnits(Collections.singletonList(
                             UpbitOrderbookUnit.builder()
-                            .askPrice(10.0)
-                            .bidPrice(10.0)
-                            .askSize(10.0)
-                            .bidSize(10.0)
-                            .build()
+                                    .askPrice(10.0)
+                                    .bidPrice(10.0)
+                                    .askSize(10.0)
+                                    .bidSize(10.0)
+                                    .build()
                     )).build();
             String id = "" + i;
             UpbitOrderbookDoc indexed = upbitOrderbookRepository.index(index, id, doc);
