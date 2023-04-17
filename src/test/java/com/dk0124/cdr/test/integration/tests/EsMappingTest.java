@@ -29,6 +29,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -110,8 +111,8 @@ public class EsMappingTest {
                     .prevClosingPrice(10.0)
                     .streamType("soc")
                     .timestamp(0L + i)
-                    .tradeDateUtc(LocalDate.of(1, 1, 1))
-                    .tradeTimeUtc(LocalDate.of(1, 1, 1))
+                    .tradeDateUtc(LocalDate.now())
+                    .tradeTimeUtc(LocalTime.MIN)
                     .tradePrice(10.0)
                     .tradeVolume(10.0)
                     .tradeTimestamp(0L + i)

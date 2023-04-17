@@ -5,9 +5,14 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,12 +62,14 @@ public class UpbitTickDoc {
     @JsonProperty("td")
     @JsonAlias({"trade_date","trade_date_utc"})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Field(type = FieldType.Date, format = DateFormat.date)
     private LocalDate tradeDateUtc;
 
     @JsonProperty("ttm")
     @JsonAlias({"trade_time","trade_time_utc"})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private LocalDate tradeTimeUtc;
+    @Field(type = FieldType.Date, format = DateFormat.hour_minute_second)
+    private LocalTime tradeTimeUtc;
 
     @JsonProperty("ttms")
     @JsonAlias("trade_timestamp")
