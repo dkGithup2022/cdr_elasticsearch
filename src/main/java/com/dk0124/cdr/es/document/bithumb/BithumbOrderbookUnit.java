@@ -14,7 +14,6 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class BithumbOrderbookUnit {
-
     @JsonProperty("code")
     @JsonAlias("symbol")
     private String code;
