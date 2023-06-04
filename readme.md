@@ -126,6 +126,9 @@ public class UpbitCandleRepositoryTest {
 
 ---
 ### 메모
+
+0. Migration 중 rest api 로만 
+
 1. EsIndexUtil 함수를 통해 인덱스를 지우고 새로 생성해도 이전 인덱스의 데이터가 남아 있는 경우가 있음.
 
    -> 현재는 통합 테스트 시 검사해야할 인덱스를 번갈아면서 하지만 조치 필요 .

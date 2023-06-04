@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class BithumbOrderbookUnit {
-
     @JsonProperty("code")
     @JsonAlias("symbol")
     private String code;
