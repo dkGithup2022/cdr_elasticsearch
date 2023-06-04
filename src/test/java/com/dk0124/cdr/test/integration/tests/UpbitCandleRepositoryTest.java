@@ -1,11 +1,12 @@
 package com.dk0124.cdr.test.integration.tests;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
-import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
-import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
-import com.dk0124.cdr.test.integration.ElasticTestContainer;
-import com.dk0124.cdr.test.util.EsIndexOps;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,16 +21,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.dk0124.cdr.constants.coinCode.UpbitCoinCode.UpbitCoinCode;
+import com.dk0124.cdr.es.dao.upbit.UpbitCandleRepository;
+import com.dk0124.cdr.es.document.upbit.UpbitCandleDoc;
+import com.dk0124.cdr.test.integration.ElasticTestContainer;
+import com.dk0124.cdr.test.util.EsIndexOps;
 
 
 @Testcontainers
