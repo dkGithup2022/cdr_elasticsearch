@@ -18,7 +18,7 @@ public class EsUtils {
 	private static final String UPBIT_CANDLE_INDEX_PREFIX = "upbit_candle";
 	private static final String BITHUMB_CANDLE_INDEX_PREFIX = "bithumb_candle";
 	private static final String UPBIT_ORDERBOOK_INDEX_PREFIX = "upbit_orderbook";
-	private static final String BITHUMB_ORDERBOOK_INDEX_PREFIX = "bihumb_orderbook";
+	private static final String BITHUMB_ORDERBOOK_INDEX_PREFIX = "bithumb_orderbook";
 
 
 	/**
