@@ -124,5 +124,4 @@ public abstract class ElasticsearchRepository<T> {
 	public abstract IndexQuery buildIndexQuery(T doc) throws JsonProcessingException;
 
 	public abstract Class getDocType();
-
 }
