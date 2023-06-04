@@ -31,7 +31,7 @@ public class EsUtils {
 
 	// 틱 ID 생성
 	public static String generateId(UpbitTickDoc tickDoc) {
-		String code = tickDoc.getCode().toLowerCase(Locale.ROOT);
+		String code = tickDoc.getCode().toLowerCase(Locale.ROOT).replace("-","_");
 		long timestamp = tickDoc.getTimestamp();
 		return code + "_" + timestamp;
 	}
@@ -43,7 +43,7 @@ public class EsUtils {
 
 	// 캔들 ID 생성
 	public static String generateId(UpbitCandleDoc candleDoc) {
-		String market = candleDoc.getMarket().toLowerCase(Locale.ROOT);
+		String market = candleDoc.getMarket().toLowerCase(Locale.ROOT).replace("-","_");
 		long timestamp = candleDoc.getTimestamp();
 		return market + "_" + timestamp;
 	}
@@ -55,7 +55,7 @@ public class EsUtils {
 
 	// 오더북 ID 생성
 	public static String generateId(UpbitOrderbookDoc orderbookDoc) {
-		String code = orderbookDoc.getCode().toLowerCase(Locale.ROOT);
+		String code = orderbookDoc.getCode().toLowerCase(Locale.ROOT).replace("-","_");
 		long timestamp = orderbookDoc.getTimestamp();
 		return code + "_" + timestamp;
 	}
@@ -66,7 +66,9 @@ public class EsUtils {
 
 	// 빗섬 캔들 아이디
 	public static String generateId(BithumbCandleDoc doc) {
-		return doc.getCode() + "_" + doc.getTimestamp();
+		String code = doc.getCode().toLowerCase(Locale.ROOT).replace("-","_");
+		long timestamp = doc.getTimestamp();
+		return code + "_" + timestamp;
 	}
 
 	// 빗섬 캔들 인덱스
@@ -76,7 +78,9 @@ public class EsUtils {
 
 	// 빗섬 오더북 아이디
 	public static String generateId(BithumbOrderbookDoc doc) {
-		return doc.getCode() + "_" + doc.getDatetime();
+		String code = doc.getCode().toLowerCase(Locale.ROOT).replace("-","_");
+		long timestamp = doc.getDatetime();
+		return code + "_" + timestamp;
 	}
 
 	// 빗섬 오더북 인덱스
@@ -86,7 +90,9 @@ public class EsUtils {
 
 	// 빗섬 틱 아이디
 	public static String generateId(BithumbTickDoc doc) {
-		return doc.getCode() + "_" + doc.getTimestamp();
+		String code = doc.getCode().toLowerCase(Locale.ROOT).replace("-","_");
+		long timestamp = doc.getTimestamp();
+		return code + "_" + timestamp;
 	}
 
 	// 빗섬 틱 인덱스
