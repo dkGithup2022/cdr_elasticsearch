@@ -67,6 +67,14 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.8.4</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- candle_mapping.json 저장 용 ENUMERATION  -->
         <dependency>
             <groupId>com.dk0124.cdr</groupId>
@@ -76,11 +84,11 @@
     </dependencies>
 
 
-
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
         <java.version>16</java.version>
+        <DontTestOnParent>true</DontTestOnParent>
     </properties>
 
 </project>

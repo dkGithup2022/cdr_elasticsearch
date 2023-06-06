@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
+import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -44,9 +46,16 @@ import com.dk0124.cdr.test.integration.ElasticTestContainer;
 import com.dk0124.cdr.test.util.EsIndexOps;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+
+/*
+
+com.dk0124.cdr.test.customCondition.TestConditions#dontTestOnParent
+	com.dk0124.cdr.test.customCondition.TestConditions#heyheyCondition
+ */
 @Testcontainers
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnabledIf("com.dk0124.cdr.test.customCondition.TestConditions#dontTestOnParent")
 public class BulkOperationsTest {
 
 	@Container
@@ -295,5 +304,6 @@ public class BulkOperationsTest {
 
 		assertEquals(sampleDocs.size(), res.size());
 	}
+
 
 }
