@@ -1,67 +1,148 @@
 ### Elasticsearch module
 
-spring-data-elasticsearch 를 이용한 프로젝트의 doc 클래스, dao 클래스에 대한 모음입니다. 
-(~4/1 까지의 작업 . 이후 migration 을 마치고 나머지 읽기 요청에 대한 함수 작업 예정  )
+spring-data-elasticsearch 를 이용한 프로젝트의 doc 클래스, dao 클래스에 대한 모음입니다.
 
 ---
 
 </br>
 
-#### 기능
+### 기능
 
 1. data type 정의. 
 2. DAO 공통 기능 정의
+3. dao 구현체 클래스 작성
 
-- index
-- index (id)
-- findAll
+
+### Data type
+
+- bithumb
+  - bithumbTickRepository
+  - bithumbOrderbookRepository
+  - bithumbCandleRepository
+
+
+</br>
+
+- upbit
+   - upbitTickRepository
+   - upbitOrderbookRepository
+   - upbitCandleRepository
+
+
+
+###  Abstraction
+
+공통 제공 기능
+1. index ( T doc )
+2. index (id)
+3. findAll
+4. bulk insert 
 
 </br>
 
 ```java
-// 공통 기능 : index, index with id, findAll 
 @Repository
 @RequiredArgsConstructor
 public abstract class ElasticsearchRepository<T> {
-    private final ElasticsearchOperations elasticsearchOperations;
+   private final ElasticsearchOperations elasticsearchOperations;
 
-    public T index(String indexName, T document) {
-        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
-        return elasticsearchOperations.save(document, indexCoordinates);
-    }
+   public T index(String indexName, T document) {
+      IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
+      return elasticsearchOperations.save(document, indexCoordinates);
+   }
+   
+   
+   public T index(String indexName, String id, T document) {
+      IndexQuery indexQuery = new IndexQueryBuilder()
+              .withId(id) // 문서 아이디 지정
+              .withObject(document)
+              .build();
 
-    public T index(String indexName, String id, T document) {
-        IndexQuery indexQuery = new IndexQueryBuilder()
-                .withId(id) // 문서 아이디 지정
-                .withObject(document)
-                .build();
+      IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
+      String response = elasticsearchOperations.index(indexQuery, indexCoordinates);
+	  
+      if (response == null) {
+         throw new RuntimeException("Operation response is null");
+      }
 
-        IndexCoordinates indexCoordinates = IndexCoordinates.of(indexName);
-        String response = elasticsearchOperations.index(indexQuery, indexCoordinates);
+      return (T)document;
+   }
 
-        if (response == null) {
-            throw new RuntimeException("Operation response is null");
-        }
+   public Page<T> findAll(String indexName, Pageable pageable) {
 
-        return (T) document;
-    }
+      Query query = Query.findAll();
+      query.setPageable(pageable);
+
+      SearchHits<T> searchHits = elasticsearchOperations.search(query, getDocType(), IndexCoordinates.of(indexName));
+      SearchPage<T> page = SearchHitSupport.searchPageFor(searchHits, query.getPageable());
+
+      return (Page<T>)SearchHitSupport.unwrapSearchHits(page);
+   }
+   
+   public List<IndexedObjectInformation> bulkIndex(List<T> documents) throws JsonProcessingException {
+      // check if empty
+      if (documents.size() == 0)
+         return null;
+
+      HashMap<String, ArrayList<IndexQuery>> queryMap = new HashMap<>();
+
+      // seperate bulk req by T.getCode() or T.getMarket();
+      documents.stream().forEach(
+              (T doc) -> {
+                 // check if instance of code ;
+                 checkType(doc);
+                 try {
+                    queryMap.computeIfAbsent(getDocStrCode(doc), e -> new ArrayList<IndexQuery>())
+                            .add(buildIndexQuery(doc));
+                 } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                 }
+              });
+
+      List<IndexedObjectInformation> result = new ArrayList<>();
+
+      // send each bulk;
+      for (String code : queryMap.keySet())
+         result.addAll(elasticsearchOperations.bulkIndex(queryMap.get(code), genIndexCoordinate(code)));
 
 
-    public Page<T> findAll(String indexName, Pageable pageable) {
+      return result;
+   }
 
-        Query query = Query.findAll();
-        query.setPageable(pageable);
+   protected abstract IndexCoordinates genIndexCoordinate(String code);
 
-        SearchHits<T> searchHits = elasticsearchOperations.search(query, getDocType(), IndexCoordinates.of(indexName));
-        SearchPage<T> page = SearchHitSupport.searchPageFor(searchHits, query.getPageable());
+   private void checkType(T doc) {
+      if (getDocType().isInstance(doc))
+         return;
+      throw new RuntimeException(
+              "There is type misMatch : generic T does not contain document |  T : " + getDocType() + " | doc: "
+                      + doc.getClass());
+   }
 
-        return (Page<T>) SearchHitSupport.unwrapSearchHits(page);
-    }
+   protected abstract String getDocStrCode(T doc);
 
-    public abstract Class getDocType();
+   public abstract IndexQuery buildIndexQuery(T doc) throws JsonProcessingException;
+
+   public abstract Class getDocType();
 }
 ```
+
+#### abstract functions 
+
+type 의존적이거나 연산들 ( 타입에 따라 함수 구현체가 다른 경우) 는 abstract 함수로 정의합니다.
+
+1. getDocType(); 
+   - es operation 에서 Clazz 를 명시해야 하는 경우 있음. 이건 각 구현체에서 각자 다루는 Doc type 을 리턴하도록 함.
+
+
+
+2. genIndexCoordinate,  getDocStrCode, buildIndexQuery
+   - bulk 요청에 쓰이는 함수들, 각 타입별로 수행해야 하는 함수를 다형적으로 표현이 안된다 ( 호출 함수 자체가 다른 경우가 있음. )
+   - 고려중인 사항은 , 저렇게 공통부분이 더러워질거면  bulk operation 자체를 abstract 하게 작성하는게 더 깔끔하지는 않을까 생각중 . 
+
 </br>
+
+
 ---
 
 ### 테스트 
@@ -127,27 +208,16 @@ public class UpbitCandleRepositoryTest {
 ---
 ### 메모
 
-0. Migration 중 rest api 로만 
+1.  insert 관련연산 의 통합 테스트 시,  insert 된 결과가 forceMerge 를 사용해도 바로 조회되지 않음.
 
-1. EsIndexUtil 함수를 통해 인덱스를 지우고 새로 생성해도 이전 인덱스의 데이터가 남아 있는 경우가 있음.
+      -> 현재 갯수 관련 test 를 전부 주석 처리 해놨는데, 남들 어떻게 하는지 조사 필요.
 
-   -> 현재는 통합 테스트 시 검사해야할 인덱스를 번갈아면서 하지만 조치 필요 .
+      -> 긴 시간의 sleep 요청을 두는 경우 , parametized test 에서 시간 너무 많이 소요 .
 
-</br>
 
-2. EsIndexUtil 클래스에서 ForceMerge 함수는 ElaticsearchOperations 에서 제공하지 않음.
-   
-    -> 현재는 RestTemplate 로 직접 api 를 작성하지만 추후 업데이트 필요. 
-   
 
 
 </br>
 
-3. 위에 공통 부분 태그나 SUPER class 로 묶을 수 있으면 좋을텐데,
-    
-    -> 적당한 용례를 못찾겠음. 추후 업데이트 필요 
-
-</br>
-
-4. elasticsearchOperations 에서 쿼리를 직접 작성 시 응답이 변수에 매핑되지 않음 .
+2. elasticsearchOperations 에서 쿼리를 직접 작성 시 응답이 변수에 매핑되지 않음 .
    -> spring data elasticsearch  에서 저렇게 밖에 지원 안하면 return type void 로 변경     
