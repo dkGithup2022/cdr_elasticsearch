@@ -55,9 +55,8 @@ com.dk0124.cdr.test.customCondition.TestConditions#dontTestOnParent
 @Testcontainers
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnabledIf("com.dk0124.cdr.test.customCondition.TestConditions#dontTestOnParent")
+@EnabledIf("com.dk0124.cdr.test.customCondition.TestConditions#doBulkTest")
 public class BulkOperationsTest {
-
 	@Container
 	private static ElasticTestContainer esContainer = new ElasticTestContainer();
 
@@ -103,6 +102,7 @@ public class BulkOperationsTest {
 		InterruptedException,
 		JsonProcessingException {
 
+		System.out.println("Test upbit_candle_bulk_pairs" + " on code : " + pair.getFirst() );
 		// GIVEN
 		UpbitCoinCode code = pair.getFirst();
 		List<UpbitCandleDoc> sampleDocs = pair.getSecond();
@@ -111,7 +111,8 @@ public class BulkOperationsTest {
 
 		// WHEN
 		upbitCandleRepository.bulkIndex(sampleDocs);
-		Thread.sleep(3000);
+		esIndexOps.forceMerge(index);
+		Thread.sleep(500);
 
 		// THEN
 		Pageable pageable = PageRequest.of(0, NORMAL_BULK_SIZE);
@@ -163,6 +164,8 @@ public class BulkOperationsTest {
 		InterruptedException,
 		JsonProcessingException {
 
+
+		System.out.println("Test upbit_orderbook_bulk_pairs" + " on code : " + pair.getFirst() );
 		// GIVEN
 		UpbitCoinCode code = pair.getFirst();
 		List<UpbitOrderbookDoc> sampleDocs = pair.getSecond();
@@ -171,7 +174,8 @@ public class BulkOperationsTest {
 
 		// WHEN
 		upbitOrderbookRepository.bulkIndex(sampleDocs);
-		Thread.sleep(10000);
+		esIndexOps.forceMerge(index);
+		Thread.sleep(500);
 
 		// THEN
 		Pageable pageable = PageRequest.of(0, NORMAL_BULK_SIZE);
@@ -235,6 +239,8 @@ public class BulkOperationsTest {
 		InterruptedException,
 		JsonProcessingException {
 
+		System.out.println("Test upbit_tick_bulk_pairs" + " on code : " + pair.getFirst() );
+
 		// GIVEN
 		UpbitCoinCode code = pair.getFirst();
 		List<UpbitTickDoc> sampleDocs = pair.getSecond();
@@ -243,8 +249,8 @@ public class BulkOperationsTest {
 
 		// WHEN
 		upbitTickRepository.bulkIndex(sampleDocs);
-		Thread.sleep(10000);
-
+		esIndexOps.forceMerge(index);
+		Thread.sleep(500);
 		// THEN
 		Pageable pageable = PageRequest.of(0, NORMAL_BULK_SIZE);
 		Page<UpbitTickDoc> res = upbitTickRepository.findAll(index, pageable);
@@ -284,6 +290,8 @@ public class BulkOperationsTest {
 	@Test
 	@DisplayName("3 개 인덱스에 bulk 요청 ")
 	public void bulk_multiple_code() throws JsonProcessingException {
+
+		System.out.println("bulk test expect exception : 3 개 인덱스에 bulk 요청");
 
 		UpbitCoinCode[] codes = new UpbitCoinCode[] {UpbitCoinCode.KRW_ADA, UpbitCoinCode.KRW_BAT,
 			UpbitCoinCode.KRW_BTC};
