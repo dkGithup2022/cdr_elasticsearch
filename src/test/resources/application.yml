@@ -5,7 +5,3 @@ spring:
     rest:
       connection-pool:
         size: 100
-
-logging:
-  level:
-    tracer: TRACE
