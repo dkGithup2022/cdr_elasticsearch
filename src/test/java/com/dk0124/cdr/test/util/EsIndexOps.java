@@ -44,7 +44,7 @@ public class EsIndexOps {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>("", headers);
         ResponseEntity<String> response = restTemplate.exchange(forcemergeUrl, HttpMethod.POST, entity, String.class);
-        System.out.println(response.getBody());
+
     }
 
     public void forceMergeAll() {
@@ -54,7 +54,7 @@ public class EsIndexOps {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>("", headers);
         ResponseEntity<String> response = restTemplate.exchange(forcemergeUrl, HttpMethod.POST, entity, String.class);
-        System.out.println(response.getBody());
+
     }
 
 
